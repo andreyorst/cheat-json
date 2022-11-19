@@ -3,17 +3,17 @@
    [clojure.edn :as edn]
    [clojure.java.io :as io])
   (:import
-   (java.io StringReader)
+   (java.io Reader StringReader)
    (java.lang StringBuilder)))
 
 (defn parse
   "Takes a file or reader and traverses, removing unnecessary spaces and
   colons (`:`) after keys.  Afterwards the result is parsed as EDN."
   [file]
-  (with-open [rdr (io/reader file)]
+  (with-open [^Reader rdr (io/reader file)]
     (loop [in-string? false
            escape? false
-           res (StringBuilder.)]
+           ^StringBuilder res (StringBuilder.)]
       (let [c (.read rdr)]
         (if (>= c 0)
           (let [c (char c)]
