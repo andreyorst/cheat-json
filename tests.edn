@@ -1,0 +1,7 @@
+#kaocha/v1
+{:color? false
+ :reporter kaocha.report/documentation
+ :plugins [:kaocha.plugin/profiling
+           :kaocha.plugin/cloverage]
+ :cloverage/opts {:output "public"
+                  :colorize false}}

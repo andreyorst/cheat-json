@@ -25,3 +25,5 @@
 /checkouts
 /classes
 /target
+/.dir-locals-2.el
+/public

@@ -1,0 +1,4 @@
+# this directory stores temporary files generated for benchmarking
+# purposes
+*.edn
+*.json

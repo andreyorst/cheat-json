@@ -1,22 +1,37 @@
-{:paths ["src"]
+{:paths ["src/clojure" "target/classes"]
  :deps {org.clojure/clojure {:mvn/version "1.11.1"}}
  :aliases
  {:build
-  {:deps {io.github.clojure/tools.build {:git/tag "v0.8.1" :git/sha "7d40500"}}
+  {:deps {io.github.clojure/tools.build {:mvn/version "0.9.6"}}
    :ns-default build}
 
-  :test/kaocha
+  :dev
+  {:extra-paths ["dev/clojure"]
+   :extra-deps {criterium/criterium {:mvn/version "0.4.6"}
+                org.clojure/spec.alpha {:mvn/version "0.3.218"}
+                ;; JSON libraries to compare to
+                pjson/pjson {:mvn/version "1.0.0"}
+                clj-json/clj-json {:mvn/version "0.5.3"}
+                org.clojure/data.json {:mvn/version "2.5.0"}
+                com.cnuernber/charred {:mvn/version "1.034"}
+                cheshire/cheshire {:mvn/version "5.12.0"}
+                metosin/jsonista {:mvn/version "0.3.8"}}}
+
+  :test
   {:extra-paths ["test"]
-   :extra-deps {lambdaisland/kaocha {:mvn/version "1.64.1010"}}
-   :main-opts   ["-m" "kaocha.runner"]
+   :extra-deps {org.clojure/data.json {:mvn/version "2.5.0"}
+                lambdaisland/kaocha {:mvn/version "1.87.1366"}
+                lambdaisland/kaocha-cloverage {:mvn/version "1.1.89"}
+                org.clojure/test.check {:mvn/version "1.1.1"}}
+   :main-opts ["-m" "kaocha.runner"]
    :exec-fn kaocha.runner/exec-fn
    :exec-args {}}
 
-  :test/cloverage
-  {:extra-paths ["test"]
-   :extra-deps  {cloverage/cloverage {:mvn/version "1.2.3"}}
-   :main-opts   ["-m" "cloverage.coverage"]
-   :exec-fn     cloverage.coverage/run-project
-   :exec-args   {:src-ns-path  ["src"]
-                 :test-ns-path ["test"]
-                 :colorize? false}}}}
+  :clj-kondo
+  {:replace-deps {clj-kondo/clj-kondo {:mvn/version "2024.02.12"}}
+   :main-opts ["-m" "clj-kondo.main"]}
+
+
+  :outdated { ;; Note that it is `:deps`, not `:extra-deps`
+             :deps {com.github.liquidz/antq {:mvn/version "RELEASE"}}
+             :main-opts ["-m" "antq.core"]}}}
