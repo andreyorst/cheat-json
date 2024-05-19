@@ -47,37 +47,33 @@ The `:dev` alias provides some extra libraries, such as other JSON parsing libra
 
 You can run the benchmarks across many libraries in the `andreyorst.cheat-json-benchmark` namespace.
 Here are the results for parsing a 58M JSON on AMD Ryzen™ 7 3750H with Clojure 1.11.1, Java 17.0.9 via [criterium 0.4.6](https://clojars.org/criterium).
-The JSON is generated from EDN, created with `clojure.test.check` generators, and transformed to JSON via the `clojure.data.json` library:
+The JSON is generated from EDN, created with `clojure.test.check` generators, and transformed to JSON via the `clojure.data.json` library (all parsers produce the same EDN as a result):
 
-| Library/function                | Mean time     | Version | Commentary                                    |
-|---------------------------------|---------------|---------|-----------------------------------------------|
-| [cheshire][1].core/parse-stream | 21.292273 µs  | 5.12.0  |                                               |
-| [jsonista][2].core/read-value   | 749.847236 ms | 0.3.8   |                                               |
-| [charred][3].api/read-json      | 1.054495 sec  | 1.034   |                                               |
-| [clj-json][4].core/parse-string | 1.115567 sec  | 0.5.3   | doesn't seem to have a stream parser          |
-| [clojure][5].edn/read           | 1.974559 sec  | 1.11.1  | Reading raw EDN is faster than the conversion |
-| [cheat-json][6]/read            | 2.790089 sec  | 0.2.3   | cheat-json converts JSON to EDN.              |
-| [clojure.data.json][7]/read     | 3.682869 sec  | 2.5.0   |                                               |
-| [pjson][8].core/read-str        | -             | 1.0.0   | can't handle the generated JSON               |
-
-(All parsers produce the same EDN as a result.)
+| Library/function                       | Mean time     | Version | Commentary                                               |
+|----------------------------------------|---------------|---------|----------------------------------------------------------|
+| [cheshire][1].core/parse-stream-strict | 665.739489 ms | 5.12.0  | `parse-stream` is lazy, so the `-strict` version is used |
+| [jsonista][2].core/read-value          | 670.450012 ms | 0.3.8   |                                                          |
+| [clj-json][4].core/parse-string        | 1.090168 sec  | 0.5.3   | doesn't seem to have a stream parser                     |
+| [charred][3].api/read-json             | 1.141876 sec  | 1.034   |                                                          |
+| [clojure][5].edn/read                  | 1.751539 sec  | 1.11.1  | Reading raw EDN is faster than the conversion            |
+| [cheat-json][6]/read                   | 2.598094 sec  | 0.2.3   | cheat-json converts JSON to EDN.                         |
+| [clojure.data.json][7]/read            | 3.656397 sec  | 2.5.0   |                                                          |
+| [pjson][8].core/read-str               | -             | 1.0.0   | can't handle the generated JSON                          |
 
 A more conventional, and less nested JSON files show a bit different results:
 
-| Library/function           | Mean time ([64KB JSON][9]) | Mean time ([5MB JSON][10]) |
-|----------------------------|---------------------------|----------------------------|
-| cheshire.core/parse-stream | 57.137999 µs              | 54.927975 µs               |
-| jsonista.core/read-value   | 683.855374 µs             | 53.730929 ms               |
-| charred.api/read-json      | 711.244077 µs             | 54.599854 ms               |
-| clj-json.core/parse-string | 299.507524 µs             | 27.764057 ms               |
-| clojure.edn/read           | 2.506467 ms               | 209.648609 ms              |
-| cheat-json/read            | 2.728934 ms               | 214.768154 ms              |
-| clojure.data.json/read     | 1.827402 ms               | 154.400935 ms              |
-| pjson.core/read-str        | 89.860981 µs              | 9.011588 ms                |
-
+| Library/function                  | Mean time ([64KB JSON][9]) | Mean time ([5MB JSON][10]) |
+|-----------------------------------|----------------------------|----------------------------|
+| cheshire.core/parse-stream-strict | 792.361051 µs              | 61.476305 ms               |
+| jsonista.core/read-value          | 720.986034 µs              | 51.473312 ms               |
+| clj-json.core/parse-string        | 317.119725 µs              | 27.490830 ms               |
+| charred.api/read-json             | 970.481054 µs              | 78.123860 ms               |
+| clojure.edn/read                  | 2.414766 ms                | 207.465807 ms              |
+| cheat-json/read                   | 2.548120 ms                | 230.911907 ms              |
+| clojure.data.json/read            | 1.773132 ms                | 159.568319 ms              |
+| pjson.core/read-str               | 88.381119 µs               | 7.027914 ms                |
 
 The difference between raw EDN `read` and Cheat-JSON wrapper is less dramatic.
-
 
 ## License
 

@@ -4,16 +4,16 @@ import java.io.Reader;
 import java.io.FilterReader;
 import java.io.IOException;
 
-/// Reads JSON discarding colons and unnecessary space characters
+/// Reads JSON discarding colons and unnecessary space characters.
+/// Effectively, transforms JSON to a semi-valid EDN
 public class CheatReader extends FilterReader {
-    boolean inString = false;
-    boolean escaped = false;
-    int next = -1;
+    private boolean inString = false;
+    private boolean escaped = false;
+    private int next = -1;
 
     @Override
     public int read() throws IOException {
-		int read;
-		for (;;) {
+		for (int read;;) {
 			read = (next != -1) ? next : super.read();
 			next = -1;
 			switch (read) {
@@ -31,8 +31,8 @@ public class CheatReader extends FilterReader {
 								next = more;
 								return read;
 						}
-						// invalid escape sequences are
-						// converted to the escaped character
+						// invalid escape sequences are converted to
+						// the escaped character
 						read = more;
 					}
 					break;
